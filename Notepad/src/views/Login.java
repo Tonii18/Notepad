@@ -50,6 +50,7 @@ public class Login extends JFrame {
 	 * Create the frame.
 	 */
 	public Login() {
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 991, 635);
 		setTitle("Login in your Notepad account");
@@ -103,6 +104,7 @@ public class Login extends JFrame {
 		contentPane.add(ask);
 		
 		signUp = new JButton("Sign Up");
+		signUp.setFocusable(false);
 		signUp.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		signUp.setContentAreaFilled(false);
 		signUp.setBorder(null);
@@ -121,9 +123,9 @@ public class Login extends JFrame {
 		
 		logoLabel = new JLabel("  ");
 		logoLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		logoLabel.setBounds(412, 27, 150, 150);
+		logoLabel.setBounds(423, 27, 128, 128);
 		contentPane.add(logoLabel);
-		logoLabel.setIcon(new ImageIcon(getClass().getResource("/notebook-logo.png")));
+		logoLabel.setIcon(new ImageIcon(getClass().getResource("/book.png")));
 		
 		/*
 		 * Events Handlers
@@ -138,6 +140,6 @@ public class Login extends JFrame {
 			public void mouseExited(MouseEvent e) {
 				loginButton.setBackground(new Color(34, 194, 184));
 			}
-		});
+		});   
 	}
 }
