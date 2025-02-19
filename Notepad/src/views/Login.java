@@ -1,9 +1,14 @@
 package views;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -19,7 +24,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import roundedComponents.RoundButton;
-import java.awt.Component;
 
 public class Login extends JFrame {
 
@@ -82,6 +86,7 @@ public class Login extends JFrame {
 		contentPane.add(separator1);
 		
 		emailTF = new JTextField();
+		emailTF.setToolTipText("Email");
 		emailTF.setBorder(null);
 		emailTF.setForeground(new Color(255, 255, 255));
 		emailTF.setFont(new Font("Inter 28pt Medium", Font.PLAIN, 17));
@@ -114,6 +119,7 @@ public class Login extends JFrame {
 		contentPane.add(signUp);
 		
 		passwordField = new JPasswordField();
+		passwordField.setToolTipText("Password");
 		passwordField.setBackground(new Color(0, 37, 64));
 		passwordField.setForeground(new Color(255, 255, 255));
 		passwordField.setFont(new Font("Inter 28pt Medium", Font.PLAIN, 17));
@@ -138,8 +144,33 @@ public class Login extends JFrame {
 
 			@Override
 			public void mouseExited(MouseEvent e) {
-				loginButton.setBackground(new Color(34, 194, 184));
+				loginButton.setBackground(new Color(34, 194, 184)); 
 			}
-		});   
+		});
+		
+		// Actions
+		signUp.addActionListener(new buttons());
+		
+		
 	}
+	
+	/*
+	 * Private Class
+	 */
+	
+	private class buttons implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JButton button = (JButton) e.getSource();
+			if(button == signUp) {
+				Signup s = new Signup();
+				s.setVisible(true);
+				dispose();
+			}
+		}
+		
+	}
+
+	
 }
