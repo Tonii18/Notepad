@@ -4,19 +4,30 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JSeparator;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import com.google.gson.Gson;
+
+import controllers.Operations;
+import models.User;
 import roundedComponents.RoundButton;
-import javax.swing.JTextField;
-import javax.swing.JPasswordField;
 
 public class Signup extends JFrame {
 
@@ -25,6 +36,10 @@ public class Signup extends JFrame {
 	private JTextField email;
 	private JTextField username;
 	private JPasswordField password;
+	private Gson gson = new Gson();
+	
+	private static String filePath = "files/users.json";
+	private static List<User> users = new ArrayList<>();
 
 	/**
 	 * Launch the application.
@@ -118,9 +133,28 @@ public class Signup extends JFrame {
 		password.setBounds(367, 422, 240, 31);
 		contentPane.add(password);
 		
+		JButton back = new JButton("Back to Login");
+		back.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		back.setContentAreaFilled(false);
+		back.setBorder(null);
+		back.setForeground(new Color(34, 194, 184));
+		back.setFont(new Font("Inter 24pt ExtraBold", Font.PLAIN, 15));
+		back.setBounds(10, 562, 151, 23);
+		contentPane.add(back);
+		
 		/*
 		 * Events Handlers
 		 */
+		
+		back.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Login l = new Login();
+				l.setVisible(true);
+				dispose();
+			}
+			
+		});
 		
 		signUp.addMouseListener(new MouseAdapter() {
 			public void mouseEntered(MouseEvent e) {
@@ -137,8 +171,37 @@ public class Signup extends JFrame {
 		 *  Actions
 		 */
 		
-		
+		signUp.addActionListener(new buttons());
 		
 		
 	}
+	
+	// Private Classes
+	
+	private class buttons implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String userEmail = email.getText();
+			String userName = username.getText();
+			String userPassword = password.getText();
+			
+			User u = new User(userEmail, userName, userPassword);
+			users.add(u);
+			File f = new File(filePath);
+			if(!f.exists()) {
+				try {
+					f.createNewFile();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			String content = gson.toJson(u);
+			Operations.writeFile(content, filePath);
+		}
+		
+	}
+	
+	// External Methods
 }
