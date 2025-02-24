@@ -17,15 +17,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import com.google.gson.Gson;
-
-import controllers.Operations;
+import controllers.DatabaseManager;
 import models.User;
 import roundedComponents.RoundButton;
 
@@ -36,10 +35,6 @@ public class Signup extends JFrame {
 	private JTextField email;
 	private JTextField username;
 	private JPasswordField password;
-	private Gson gson = new Gson();
-	
-	private static String filePath = "files/users.json";
-	private static List<User> users = new ArrayList<>();
 
 	/**
 	 * Launch the application.
@@ -182,26 +177,27 @@ public class Signup extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			String userEmail = email.getText();
-			String userName = username.getText();
-			String userPassword = password.getText();
-			
-			User u = new User(userEmail, userName, userPassword);
-			users.add(u);
-			File f = new File(filePath);
-			if(!f.exists()) {
-				try {
-					f.createNewFile();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+			JButton button = (JButton)e.getSource();
+			if(button == signUp) {
+				registerUser();
 			}
-			String content = gson.toJson(u);
-			Operations.writeFile(content, filePath);
 		}
 		
 	}
 	
 	// External Methods
+	
+	public void registerUser() {
+		String userEmail = email.getText();
+		String userName = username.getText();
+		String userPassword = password.getText();
+		
+		User u = new User(userEmail, userName, userPassword);
+		DatabaseManager.registerUser(u);
+		JOptionPane.showMessageDialog(null, "You have been registered succesfully!");
+		
+		Home h = new Home();
+		h.setVisible(true);
+		dispose();
+	}
 }

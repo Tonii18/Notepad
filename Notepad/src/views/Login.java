@@ -7,8 +7,6 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -16,6 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JSeparator;
@@ -23,6 +22,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import controllers.DatabaseManager;
+import models.User;
 import roundedComponents.RoundButton;
 
 public class Login extends JFrame {
@@ -150,6 +151,7 @@ public class Login extends JFrame {
 		
 		// Actions
 		signUp.addActionListener(new buttons());
+		loginButton.addActionListener(new buttons());
 		
 		
 	}
@@ -167,9 +169,37 @@ public class Login extends JFrame {
 				Signup s = new Signup();
 				s.setVisible(true);
 				dispose();
+			}else if(button == loginButton) {
+				loginUser();
 			}
 		}
 		
+	}
+	
+	/*
+	 * External methods
+	 */
+	
+	public void loginUser() {
+		boolean logged = false;
+		
+		String email = emailTF.getText();
+		String password = passwordField.getText();
+		
+		User u = new User(email, password);
+		
+		logged = DatabaseManager.loginUser(u);
+		
+		if(logged) {
+			JOptionPane.showMessageDialog(null, "You have logged succesfully!");
+			Home h = new Home();
+			h.setVisible(true);
+			dispose(); 
+		}else {
+			JOptionPane.showMessageDialog(null, "Your credentials are wrong!");
+			emailTF.setText("");
+			passwordField.setText("");
+		}
 	}
 
 	

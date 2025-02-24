@@ -30,6 +30,13 @@ public class User {
 		this.password = password;
 		this.sections = new ArrayList<>();
 	}
+	
+
+	public User(String email, String password) {
+		super();
+		this.email = email;
+		this.password = password;
+	}
 
 	public String getEmail() {
 		return email;
