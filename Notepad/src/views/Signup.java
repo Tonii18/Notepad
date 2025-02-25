@@ -196,7 +196,7 @@ public class Signup extends JFrame {
 		DatabaseManager.registerUser(u);
 		JOptionPane.showMessageDialog(null, "You have been registered succesfully!");
 		
-		Home h = new Home();
+		Home h = new Home(u);
 		h.setVisible(true);
 		dispose();
 	}

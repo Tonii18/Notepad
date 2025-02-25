@@ -2,10 +2,15 @@ package controllers;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.mysql.cj.xdevapi.Statement;
+
+import models.Section;
 import models.User;
-import views.Section;
 
 public class DatabaseManager {
 	
@@ -52,6 +57,72 @@ public class DatabaseManager {
 		
 		return logged;
 		
+	}
+
+	// TODAY PROGRESS
+	
+	public static int getUserId(User u) {
+		String email = u.getEmail();
+		int userId = -1;
+		
+		String sql = "SELECT id FROM users WHERE email = ?";
+		
+		try {
+			Connection conn = Connections.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql);
+			
+			ps.setString(1, u.getEmail());
+			
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				userId = rs.getInt("id");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return userId;
+	}
+	
+	public static void addSection(User u, String name) {
+		String sql = "INSERT INTO sections (user_id, name) VALUES (?, ?)";
+		
+		try {
+			Connection conn = Connections.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql);
+			
+			ps.setInt(1, getUserId(u));
+			ps.setString(2, name);
+			
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static List<Section> getSections(User u){
+		List<Section> sections = new ArrayList<>();
+		
+		String sql = "SELECT * FROM sections where user_id = ?";
+		
+		try {
+			Connection conn = Connections.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql);
+			
+			ps.setInt(1, getUserId(u));
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				String sectionName = rs.getString("name");
+				Section section = new Section(sectionName);
+				sections.add(section);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return sections;
 	}
 
 }

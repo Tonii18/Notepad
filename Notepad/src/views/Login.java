@@ -192,7 +192,7 @@ public class Login extends JFrame {
 		
 		if(logged) {
 			JOptionPane.showMessageDialog(null, "You have logged succesfully!");
-			Home h = new Home();
+			Home h = new Home(u);
 			h.setVisible(true);
 			dispose(); 
 		}else {

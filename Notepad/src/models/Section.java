@@ -17,6 +17,7 @@ public class Section {
 		this.name = name;
 		this.notes = new ArrayList<>();
 	}
+	
 
 	public String getName() {
 		return name;

@@ -20,6 +20,7 @@ public class User {
 		this.name = name;
 		this.password = password;
 		this.sections = sections;
+		this.sections = new ArrayList<>();
 	}
 	
 
@@ -36,6 +37,7 @@ public class User {
 		super();
 		this.email = email;
 		this.password = password;
+		this.sections = new ArrayList<>();
 	}
 
 	public String getEmail() {
@@ -75,7 +77,13 @@ public class User {
 		return "User [email=" + email + ", name=" + name + ", password=" + password + ", sections=" + sections + "]";
 	}
 	
+	public void addSection(Section s) {
+		sections.add(s);
+	}
 	
+	public void deleteSection(Section s) {
+		sections.remove(s);
+	}
 	
 
 }
