@@ -1,5 +1,7 @@
 package models;
 
+import views.NotePanel;
+
 public class Note {
 	
 	private String content;
@@ -35,9 +37,6 @@ public class Note {
 	public String toString() {
 		return "Note [content=" + content + ", done=" + done + "]";
 	}
-	
-	
-	
 	
 
 }

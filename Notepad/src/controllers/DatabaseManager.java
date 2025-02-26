@@ -7,10 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mysql.cj.xdevapi.Statement;
-
 import models.Section;
 import models.User;
+import views.SectionPanel;
 
 public class DatabaseManager {
 	
@@ -123,6 +122,27 @@ public class DatabaseManager {
 		}
 		
 		return sections;
+	}
+	
+	public static boolean deleteSection(String section) {
+		boolean deleted = false;
+		
+		String sql = "DELETE FROM sections WHERE name = ?";
+		
+		try {
+			Connection conn = Connections.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql);
+			
+			ps.setString(1, section);
+			
+			ps.executeUpdate();
+			
+			deleted = true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return deleted;
 	}
 
 }

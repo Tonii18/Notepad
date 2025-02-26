@@ -7,6 +7,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -17,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
@@ -24,17 +27,14 @@ import controllers.DatabaseManager;
 import models.Section;
 import models.User;
 import roundedComponents.RoundButton;
-import roundedComponents.RoundButtonImage;
 import roundedComponents.RoundPanel;
 import roundedComponents.RoundTextField;
-import javax.swing.ScrollPaneConstants;
 
 public class Home extends JFrame {
 
 	private JPanel contentPane;
 	private RoundButton logout;
 	private RoundButton addSection;
-	private RoundButtonImage delete;
 	private JTextField textField;
 	private RoundPanel sectionsPanel;
 	private JScrollPane scrollPane;
@@ -98,7 +98,7 @@ public class Home extends JFrame {
 		
 		sectionsPanel = new RoundPanel(10, 10);
 		sectionsPanel.setBackground(new Color(46, 46, 46));
-		sectionsPanel.setBounds(10, 11, 294, 485);
+		sectionsPanel.setBounds(10, 11, 294, 468);
 		contentPane.add(sectionsPanel);
 		sectionsPanel.setLayout(null);
 		
@@ -107,7 +107,7 @@ public class Home extends JFrame {
 		scrollPane.getViewport().setBackground(new Color(46, 46, 46));
 		scrollPane.setBackground(new Color(46, 46, 46));
 		scrollPane.setBorder(null);
-		scrollPane.setBounds(10, 11, 274, 463);
+		scrollPane.setBounds(10, 11, 274, 446);
 		sectionsPanel.add(scrollPane);
 		
 		/*scrollPane.getVerticalScrollBar().setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
@@ -125,7 +125,7 @@ public class Home extends JFrame {
 		logout.setBackground(new Color(146, 87, 255));
 		logout.setBorder(null);
 		logout.setFont(new Font("Inter 24pt SemiBold", Font.PLAIN, 15));
-		logout.setBounds(10, 555, 294, 30);
+		logout.setBounds(10, 548, 294, 37);
 		contentPane.add(logout);
 		
 		addSection = new RoundButton("Add Section", 5, 5);
@@ -134,27 +134,22 @@ public class Home extends JFrame {
 		addSection.setFont(new Font("Inter 24pt SemiBold", Font.PLAIN, 15));
 		addSection.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		addSection.setBorder(null);
-		addSection.setBounds(10, 507, 196, 37);
+		addSection.setBounds(10, 500, 294, 37);
 		contentPane.add(addSection);
-		
-		delete = new RoundButtonImage("", 5, 5);
-		delete.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		delete.setBackground(new Color(255, 92, 92));
-		delete.setBorder(null);
-		delete.setBounds(215, 507, 89, 37);
-		delete.setIcon(new ImageIcon(getClass().getResource("/delete2.png")));
-		contentPane.add(delete);
 		
 		// Functions
 		loadSections();
 		
 		// Buttons actions
 		addSection.addActionListener(new buttons());
+		logout.addActionListener(new buttons());
 	}
 	
 	/*
-	 * PRIVATE CLASSES
+	 * ALL THIS CODE IS FOR ADDING SECTIONS
 	 */
+	
+	// PRIVATE CLASSES
 	
 	private class buttons implements ActionListener {
 		@Override
@@ -166,6 +161,36 @@ public class Home extends JFrame {
 		}
 		
 	}
+	
+	private class mouse extends MouseAdapter{
+		
+		private SectionPanel section; // Store the section reference
+
+	    public mouse(SectionPanel section) {
+	        this.section = section;
+	    }
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			int button = e.getButton();
+			if(button == MouseEvent.BUTTON3) {
+				int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this section?", "Confirm deletion", JOptionPane.YES_NO_OPTION);
+				if(confirm == JOptionPane.YES_OPTION) {
+					deleteSection(section);
+				}
+			}
+		}
+		
+		public void mouseEntered(MouseEvent e) {
+			section.setBackground(new Color(148, 150, 150));
+		}
+		
+		public void mouseExited(MouseEvent e) {
+			section.setBackground(new Color(91, 92, 92));
+		}
+		
+	}
+	
 	
 	// EXTERNAL METHODS
 	
@@ -195,6 +220,7 @@ public class Home extends JFrame {
 
 	    panel.revalidate();
 	    panel.repaint();
+	    loadSections();
 	}
 
 	private void loadSections() {
@@ -204,7 +230,7 @@ public class Home extends JFrame {
 
 	    if (panel == null) {
 	        panel = new JPanel();
-	        panel.setBorder(new EmptyBorder(10, 10, 10, 10)); // Márgenes (arriba, izquierda, abajo, derecha)
+	        panel.setBorder(new EmptyBorder(10, 5, 10, 20));
 
 	        panel.setLayout(new GridLayout(0, 1, 15, 15));
 	        panel.setBackground(new Color(46, 46, 46));
@@ -224,6 +250,8 @@ public class Home extends JFrame {
 	        sectionButton.setPreferredSize(new java.awt.Dimension(240, 60));
 
 	        panel.add(sectionButton);
+	        
+	        sectionButton.addMouseListener(new mouse(sectionButton));
 	    }
 
 	    panel.revalidate();
@@ -231,7 +259,16 @@ public class Home extends JFrame {
 	}
 
 
-
+	public void deleteSection(SectionPanel section) {
+		if(DatabaseManager.deleteSection(section.getText())) {
+			JOptionPane.showMessageDialog(null, "Seccion eliminada correctamente");
+			loadSections();
+		}
+	}
+	
+	/*
+	 * ALL THIS CODE IS FOR ADDING NOTES FOR EACH SECTION
+	 */
 
 	
 	
